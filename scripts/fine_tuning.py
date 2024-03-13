@@ -102,11 +102,8 @@ class PEFT(FineTune):
 
 # In[13]:
 
-
-
-
-
-# In[ ]:
+model = FineTune(models_dict['BERT-Base'], datasets_dict['MRPC'])
+model.train()
 
 
 
