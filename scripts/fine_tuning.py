@@ -10,7 +10,8 @@ from transformers import AutoModelForSequenceClassification
 from transformers import TrainingArguments, Trainer
 import os
 from datetime import datetime
-import warnings
+import evaluate
+import numpy as np
 
 
 # In[5]:
@@ -41,13 +42,14 @@ class FineTune():
 
         print('Generating tokens for the dataset')
         self.tokenizer =  AutoTokenizer.from_pretrained(model_path)
-        self.tokenized_dataset = self.tokenize()
+        tokenized_dataset = self.tokenize()
+        self.tokenized_dataset = tokenized_dataset.train_test_split(test_size=0.1)
         self.num_labels = len(set(self.dataset['label']))
 
         print(f'Loading the model from {model_path}')
         self.model = AutoModelForSequenceClassification.from_pretrained(model_path, num_labels=self.num_labels)
 
-        self.log_file = os.path.join(os.getcwd(), 'logs', os.path.basename(model_path)+'_'+os.path.basename(dataset_dict['path']+'.txt'))
+        self.log_file = os.path.join(os.path.dirname(os.getcwd()), 'logs', os.path.basename(model_path)+'_'+os.path.basename(dataset_dict['path']+'.txt'))
         print(f'Metrics are written to {self.log_file}')
 
     def tokenize(self):
@@ -68,21 +70,34 @@ class FineTune():
         return tokenized_dataset
 
     def train(self, num_epochs=6):
-        training_args = TrainingArguments(output_dir="logs", num_train_epochs=num_epochs)
+        training_args = TrainingArguments(output_dir="logs", 
+                                          num_train_epochs=num_epochs, 
+                                          evaluation_strategy="epoch",
+                                          save_strategy="no")
+
+        accuracy = evaluate.load("accuracy")
+        def compute_metrics(eval_pred):
+            predictions, labels = eval_pred
+            predictions = np.argmax(predictions, axis=1)
+            return accuracy.compute(predictions=predictions, references=labels)
 
         self.trainer = Trainer(
             model=self.model,
             args=training_args,
-            train_dataset=self.tokenized_dataset
+            train_dataset=self.tokenized_dataset['train'],
+            eval_dataset=self.tokenized_dataset['test'],
+            compute_metrics=compute_metrics,
         )
 
         self.trainer.train()
 
         def write_logs():
-          with open(self.log_file, "w") as file:
-              file.write(str(datetime.now())+"\n")
-              file.write(str(self.trainer.state.log_history) + "\n\n")
-
+            with open(self.log_file, "w") as file:
+                file.write(str(datetime.now())+"\n")
+                file.write(str(self.trainer.state.log_history) + "\n\n")
+            print(f"Results are written to {self.log_file}")
+    
+        # save results at the end
         write_logs()
 
 
@@ -102,9 +117,28 @@ class PEFT(FineTune):
 
 # In[13]:
 
-model = FineTune(models_dict['BERT-Large'], datasets_dict['ANLI'])
-model.train()
+import argparse
 
+parser = argparse.ArgumentParser()
 
+parser.add_argument('--model', type=str, choices=['BERT-Base', 'BERT-Large', 'RoBERTa-Base', 'RoBERTa-Large'], 
+                    help="Please pass the model you want to train", required=True)
+parser.add_argument('--dataset', type=str, choices=['MRPC', 'QQP', 'SST', 'ANLI'], 
+                    help="Please specify the dataset to finetune", required=True)
+parser.add_argument('--n_epochs', type=int, 
+                    help="Default epochs is 6", default=6)
+
+def main():
+    args = parser.parse_args()
+
+    model_name = args.model
+    dataset_name = args.dataset
+    num_epochs = args.n_epochs
+
+    model = FineTune(models_dict[model_name], datasets_dict[dataset_name])
+    model.train(num_epochs=num_epochs)
+
+if __name__ == "__main__":
+    main()
 
 
