@@ -1,3 +1,8 @@
+#!/bin/bash
+#SBATCH --job-name=mieproject
+#SBATCH --nodes=1
+#SBATCH --mem=32G
+
 # task-1
 python3 ./fine_tuning.py --model BERT-Base --dataset ANLI --n_epochs 20
 python3 ./fine_tuning.py --model BERT-Large --dataset ANLI --n_epochs 20
