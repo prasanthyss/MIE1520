@@ -48,8 +48,10 @@ class FineTune():
 
         print(f'Loading the model from {model_path}')
         self.model = AutoModelForSequenceClassification.from_pretrained(model_path, num_labels=self.num_labels)
-
-        self.log_file = os.path.join(os.path.dirname(os.getcwd()), 'logs', os.path.basename(model_path)+'_'+os.path.basename(dataset_dict['path']+'.txt'))
+        log_dir = os.path.join(os.path.dirname(os.getcwd()), 'logs')
+        if not os.path.exists(log_dir):
+            os.makedirs(log_dir)
+        self.log_file = os.path.join(log_dir, os.path.basename(model_path)+'_'+os.path.basename(dataset_dict['path']+'.txt'))
         print(f'Metrics are written to {self.log_file}')
 
     def tokenize(self):

@@ -1,0 +1,3 @@
+2024-03-17 22:40:38.785752
+[{'eval_train_loss': 0.40955430269241333, 'eval_train_accuracy': 0.8324750075734626, 'eval_train_runtime': 135.0137, 'eval_train_samples_per_second': 24.449, 'eval_train_steps_per_second': 3.059, 'epoch': 1.0, 'step': 413}, {'eval_test_loss': 0.4573788344860077, 'eval_test_accuracy': 0.7901907356948229, 'eval_test_runtime': 14.7495, 'eval_test_samples_per_second': 24.882, 'eval_test_steps_per_second': 3.119, 'epoch': 1.0, 'step': 413}, {'train_runtime': 617.1103, 'train_samples_per_second': 5.349, 'train_steps_per_second': 0.669, 'total_flos': 868529593743360.0, 'train_loss': 0.5748791636912643, 'epoch': 1.0, 'step': 413}]
+

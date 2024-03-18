@@ -1,3 +1,0 @@
-2024-03-15 18:27:30.810815
-[{'eval_loss': 0.4542198181152344, 'eval_accuracy': 0.784741144414169, 'eval_runtime': 14.883, 'eval_samples_per_second': 24.659, 'eval_steps_per_second': 3.091, 'epoch': 1.0, 'step': 413}, {'train_runtime': 483.0205, 'train_samples_per_second': 6.834, 'train_steps_per_second': 0.855, 'total_flos': 868529593743360.0, 'train_loss': 0.5289983864846588, 'epoch': 1.0, 'step': 413}]
-
