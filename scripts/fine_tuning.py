@@ -85,7 +85,7 @@ class FineTune():
             model=self.model,
             args=training_args,
             train_dataset=self.tokenized_dataset['train'],
-            eval_dataset=self.tokenized_dataset['test'],
+            eval_dataset=self.tokenized_dataset,
             compute_metrics=compute_metrics,
         )
 
