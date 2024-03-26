@@ -51,7 +51,8 @@ class FineTune():
         log_dir = os.path.join(os.path.dirname(os.getcwd()), 'logs')
         if not os.path.exists(log_dir):
             os.makedirs(log_dir)
-        self.log_file = os.path.join(log_dir, os.path.basename(model_path)+'_'+os.path.basename(dataset_dict['path']+'.txt'))
+        self.log_file = os.path.join(log_dir, '_'.join(['finetune', os.path.basename(model_path), 
+                                                       os.path.basename(dataset_dict['path']+'.json')]))
         print(f'Metrics are written to {self.log_file}')
 
     def tokenize(self):
@@ -104,20 +105,6 @@ class FineTune():
 
 
 # In[12]:
-
-
-from peft import LoraConfig, TaskType
-from peft import get_peft_model
-
-class PEFT(FineTune):
-    def __init__(self, model_path, dataset_dict, lora_rank=4):
-        super().__init__(model_path, dataset_dict)
-        self.rank = lora_rank
-        self.config = LoraConfig(task_type=TaskType.SEQ_CLS, inference_mode=False, r=self.rank, lora_alpha=32)
-        self.model = get_peft_model(self.model, self.config)
-
-
-# In[13]:
 
 import argparse
 
