@@ -16,11 +16,21 @@ class AccuracyStoppingCallback(TrainerCallback):
         self.test_accuracy = test_accuracy
         self.num_epochs = num_epochs
         self.callback_called = False
+        self.reached_train_acc = False
+        self.reached_test_acc = False
 
     def on_evaluate(self, args, state, control, metrics, **kwargs):
+        print(metrics)
         # stop if we reached the desired accuracy or max_epochs
-        if (metrics['eval_train_accuracy'] >= 0.9*self.train_accuracy and \
-           metrics['eval_test_accuracy'] >= 0.9*self.test_accuracy) or metrics['epoch'] >= self.num_epochs:
+        try:
+            self.reached_train_acc = metrics['eval_train_accuracy'] >= 0.9*self.train_accuracy
+        except:
+            pass
+        try:
+            self.reached_test_acc = metrics['eval_test_accuracy'] >= 0.9*self.test_accuracy
+        except:
+            pass
+        if((self.reached_train_acc and self.reached_test_acc) or metrics['epoch'] >= self.num_epochs):
             control.should_training_stop = True
             self.callback_called = True
 
