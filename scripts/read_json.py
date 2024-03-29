@@ -1,5 +1,8 @@
-# %% [markdown]
-# ## Convert .txt to .json
+"""
+If you run the file, it will go through logs dir and 
+collects the second line into a json file.
+Some helper functions are also written to use in lora.py
+"""
 
 # %%
 import os

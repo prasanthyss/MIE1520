@@ -52,7 +52,7 @@ class FineTune():
         if not os.path.exists(log_dir):
             os.makedirs(log_dir)
         self.log_file = os.path.join(log_dir, '_'.join(['finetune', os.path.basename(model_path), 
-                                                       os.path.basename(dataset_dict['path']+'.json')]))
+                                                       os.path.basename(dataset_dict['path']+'.txt')]))
         print(f'Metrics are written to {self.log_file}')
 
     def tokenize(self):
@@ -95,7 +95,7 @@ class FineTune():
         self.trainer.train()
 
         def write_logs():
-            with open(self.log_file, "w") as file:
+            with open(self.log_file, "a") as file:
                 file.write(str(datetime.now())+"\n")
                 file.write(str(self.trainer.state.log_history) + "\n\n")
             print(f"Results are written to {self.log_file}")

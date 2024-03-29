@@ -16,21 +16,48 @@ class AccuracyStoppingCallback(TrainerCallback):
         self.test_accuracy = test_accuracy
         self.num_epochs = num_epochs
         self.callback_called = False
-        self.reached_train_acc = False
-        self.reached_test_acc = False
+        self.reached_90_train_acc = False
+        self.reached_90_test_acc = False
+        self.reached_95_train_acc = False
+        self.reached_95_test_acc = False
 
     def on_evaluate(self, args, state, control, metrics, **kwargs):
-        print(metrics)
-        # stop if we reached the desired accuracy or max_epochs
-        try:
-            self.reached_train_acc = metrics['eval_train_accuracy'] >= 0.9*self.train_accuracy
-        except:
-            pass
-        try:
-            self.reached_test_acc = metrics['eval_test_accuracy'] >= 0.9*self.test_accuracy
-        except:
-            pass
-        if((self.reached_train_acc and self.reached_test_acc) or metrics['epoch'] >= self.num_epochs):
+        """ 
+        call back called on evaluate.
+        stop training when we reach 95% train and test accuracy or reach max_epochs.
+        """
+        
+        bools_dict = {"90_train": self.reached_90_train_acc, 
+                      "90_test": self.reached_90_test_acc,
+                      "95_train": self.reached_95_train_acc,
+                      "95_test": self.reached_95_test_acc}
+        
+        def set_bool(var_name, metric_key):
+            if ('train' in var_name):
+                acc = self.train_accuracy
+            else:
+                acc = self.test_accuracy
+            
+            if ('90' in var_name):
+                acc = 0.9*acc
+            else:
+                acc = 0.95*acc
+
+            try:
+                bools_dict[var_name] = metrics[metric_key] >= acc
+            except:
+                pass
+
+        if (not self.reached_90_train_acc):
+            set_bool('90_train', 'eval_train_accuracy')
+        if (not self.reached_90_test_acc):
+            set_bool('90_test', 'eval_test_accuracy')
+        if (not self.reached_95_train_acc):
+            set_bool('95_train', 'eval_train_accuracy')
+        if (not self.reached_95_test_acc):
+            set_bool('95_test', 'eval_test_accuracy')
+
+        if((self.reached_95_train_acc and self.reached_95_test_acc) or metrics['epoch'] >= self.num_epochs):
             control.should_training_stop = True
             self.callback_called = True
 
@@ -41,14 +68,21 @@ class PEFT(FineTune):
         # set the log file
         log_dir = os.path.join(os.path.dirname(os.getcwd()), 'logs')
         self.log_file = os.path.join(log_dir, '_'.join(['lora', os.path.basename(model_path), 
-                                                       os.path.basename(dataset_dict['path']+'.json')]))
+                                                       os.path.basename(dataset_dict['path']+'.txt')]))
         self.train_acc = train_acc
         self.test_acc = test_acc
-        
+    
+        self.log_lines = []
         
     def train(self, num_epochs=6):
         lora_ranks = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]
         callback = AccuracyStoppingCallback(self.train_acc, self.test_acc, num_epochs)
+
+        logged_90_train = False
+        logged_90_test = False
+        logged_95_train = False
+        logged_95_test = False
+
         for lora_rank in lora_ranks:
             if (callback.callback_called):
                 break
@@ -76,10 +110,40 @@ class PEFT(FineTune):
 
             self.trainer.train()
 
+            def append_to_logs():
+                self.log_lines.append(str(datetime.now()) + " lora_rank: " + str(lora_rank) + " num_params: " + 
+                                       str(model.get_nb_trainable_parameters()))
+                self.log_lines.append(str(self.trainer.state.log_history) + "\n\n")
+        
+                # write first ranks to reach given accuracies at the beginning of the log file.
+                if (not logged_90_train and callback.reached_90_train_acc):
+                    self.log_lines = ["90_train: " + str(datetime.now()) + " lora_rank: " + str(lora_rank) +  " num_params: " + 
+                                       str(model.get_nb_trainable_parameters())] + self.log_lines
+                    logged_90_train = True
+            
+                if (not logged_90_test and callback.reached_90_test_acc):
+                    self.log_lines = ["90_test: " + str(datetime.now()) + " lora_rank: " + str(lora_rank) +  " num_params: " + 
+                                       str(model.get_nb_trainable_parameters())] + self.log_lines
+                    logged_90_test = True
+                    
+                if (not logged_95_train and callback.reached_95_train_acc):
+                    self.log_lines = ["95_train: " + str(datetime.now()) + " lora_rank: " + str(lora_rank) +  " num_params: " + 
+                                       str(model.get_nb_trainable_parameters())] + self.log_lines
+                    logged_95_train = True
+                    
+                if (not logged_95_test and callback.reached_95_test_acc):
+                    self.log_lines = ["95_test: " + str(datetime.now()) + " lora_rank: " + str(lora_rank) +  " num_params: " + 
+                                       str(model.get_nb_trainable_parameters())] + self.log_lines
+                    logged_95_test = True
+            
+
+            # append lines after each training run
+            append_to_logs()
+
         def write_logs():
             with open(self.log_file, "a") as file:
-                file.write(str(datetime.now())+ " lora_rank " + str(lora_rank) + "\n")
-                file.write(str(self.trainer.state.log_history) + "\n\n")
+                for line in self.log_lines:
+                    file.write(line)
             print(f"Results are appended to {self.log_file}")
     
         # save results at the end
