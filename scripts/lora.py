@@ -14,8 +14,10 @@ class AccuracyStoppingCallback(TrainerCallback):
     def __init__(self, train_accuracy, test_accuracy, num_epochs):
         self.train_accuracy = train_accuracy
         self.test_accuracy = test_accuracy
+
         self.num_epochs = num_epochs
-        self.callback_called = False
+        self.reached_accuracy = False
+
         self.reached_90_train_acc = False
         self.reached_90_test_acc = False
         self.reached_95_train_acc = False
@@ -33,33 +35,22 @@ class AccuracyStoppingCallback(TrainerCallback):
                       "95_test": self.reached_95_test_acc}
         
         def set_bool(var_name, metric_key):
-            if ('train' in var_name):
-                acc = self.train_accuracy
-            else:
-                acc = self.test_accuracy
-            
-            if ('90' in var_name):
-                acc = 0.9*acc
-            else:
-                acc = 0.95*acc
+
+            acc = self.train_accuracy if('train' in var_name) else self.test_accuracy
+            acc = 0.9*acc if('90' in var_name) else 0.95*acc
 
             try:
-                bools_dict[var_name] = metrics[metric_key] >= acc
+                bools_dict[var_name] = (metrics[metric_key] >= acc)
             except:
                 pass
 
-        if (not self.reached_90_train_acc):
-            set_bool('90_train', 'eval_train_accuracy')
-        if (not self.reached_90_test_acc):
-            set_bool('90_test', 'eval_test_accuracy')
-        if (not self.reached_95_train_acc):
-            set_bool('95_train', 'eval_train_accuracy')
-        if (not self.reached_95_test_acc):
-            set_bool('95_test', 'eval_test_accuracy')
-
-        if((self.reached_95_train_acc and self.reached_95_test_acc) or metrics['epoch'] >= self.num_epochs):
-            control.should_training_stop = True
-            self.callback_called = True
+        set_bool('90_train', 'eval_train_accuracy')
+        set_bool('90_test', 'eval_test_accuracy')
+        set_bool('95_train', 'eval_train_accuracy')
+        set_bool('95_test', 'eval_test_accuracy')
+        
+        self.reached_accuracy= (self.reached_95_train_acc and self.reached_95_test_acc)
+        control.should_training_stop = (self.reached_accuracy or metrics['epoch'] >= self.num_epochs)
 
 class PEFT(FineTune):
     def __init__(self, model_path, dataset_dict, train_acc, test_acc):
@@ -115,7 +106,7 @@ class PEFT(FineTune):
             
 
         for lora_rank in lora_ranks:
-            if (callback.callback_called):
+            if (callback.reached_accuracy):
                 break
             config = LoraConfig(task_type=TaskType.SEQ_CLS, inference_mode=False, r=lora_rank, lora_alpha=32)
             model = get_peft_model(self.model, config)
