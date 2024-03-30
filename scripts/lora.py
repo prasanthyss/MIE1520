@@ -78,10 +78,41 @@ class PEFT(FineTune):
         lora_ranks = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]
         callback = AccuracyStoppingCallback(self.train_acc, self.test_acc, num_epochs)
 
-        logged_90_train = False
-        logged_90_test = False
-        logged_95_train = False
-        logged_95_test = False
+        self.logged_90_train = False
+        self.logged_90_test = False
+        self.logged_95_train = False
+        self.logged_95_test = False
+
+        def append_to_logs():
+            """
+            Helper function to write output to logs.
+            """
+            
+            self.log_lines.append(str(datetime.now()) + " lora_rank: " + str(lora_rank) + " num_params: " + 
+                                    str(model.get_nb_trainable_parameters()))
+            self.log_lines.append(str(self.trainer.state.log_history) + "\n\n")
+    
+            # write first ranks to reach given accuracies at the beginning of the log file.
+            if (not self.logged_90_train and callback.reached_90_train_acc):
+                self.log_lines = ["90_train: " + str(datetime.now()) + " lora_rank: " + str(lora_rank) +  " num_params: " + 
+                                    str(model.get_nb_trainable_parameters())] + self.log_lines
+                self.logged_90_train = True
+        
+            if (not self.logged_90_test and callback.reached_90_test_acc):
+                self.log_lines = ["90_test: " + str(datetime.now()) + " lora_rank: " + str(lora_rank) +  " num_params: " + 
+                                    str(model.get_nb_trainable_parameters())] + self.log_lines
+                self.logged_90_test = True
+                
+            if (not self.logged_95_train and callback.reached_95_train_acc):
+                self.log_lines = ["95_train: " + str(datetime.now()) + " lora_rank: " + str(lora_rank) +  " num_params: " + 
+                                    str(model.get_nb_trainable_parameters())] + self.log_lines
+                self.logged_95_train = True
+                
+            if (not self.logged_95_test and callback.reached_95_test_acc):
+                self.log_lines = ["95_test: " + str(datetime.now()) + " lora_rank: " + str(lora_rank) +  " num_params: " + 
+                                    str(model.get_nb_trainable_parameters())] + self.log_lines
+                self.logged_95_test = True
+            
 
         for lora_rank in lora_ranks:
             if (callback.callback_called):
@@ -109,35 +140,7 @@ class PEFT(FineTune):
             )
 
             self.trainer.train()
-
-            def append_to_logs():
-                self.log_lines.append(str(datetime.now()) + " lora_rank: " + str(lora_rank) + " num_params: " + 
-                                       str(model.get_nb_trainable_parameters()))
-                self.log_lines.append(str(self.trainer.state.log_history) + "\n\n")
-        
-                # write first ranks to reach given accuracies at the beginning of the log file.
-                if (not logged_90_train and callback.reached_90_train_acc):
-                    self.log_lines = ["90_train: " + str(datetime.now()) + " lora_rank: " + str(lora_rank) +  " num_params: " + 
-                                       str(model.get_nb_trainable_parameters())] + self.log_lines
-                    logged_90_train = True
-            
-                if (not logged_90_test and callback.reached_90_test_acc):
-                    self.log_lines = ["90_test: " + str(datetime.now()) + " lora_rank: " + str(lora_rank) +  " num_params: " + 
-                                       str(model.get_nb_trainable_parameters())] + self.log_lines
-                    logged_90_test = True
-                    
-                if (not logged_95_train and callback.reached_95_train_acc):
-                    self.log_lines = ["95_train: " + str(datetime.now()) + " lora_rank: " + str(lora_rank) +  " num_params: " + 
-                                       str(model.get_nb_trainable_parameters())] + self.log_lines
-                    logged_95_train = True
-                    
-                if (not logged_95_test and callback.reached_95_test_acc):
-                    self.log_lines = ["95_test: " + str(datetime.now()) + " lora_rank: " + str(lora_rank) +  " num_params: " + 
-                                       str(model.get_nb_trainable_parameters())] + self.log_lines
-                    logged_95_test = True
-            
-
-            # append lines after each training run
+            # append logs to log lines
             append_to_logs()
 
         def write_logs():

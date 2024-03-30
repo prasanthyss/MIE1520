@@ -53,7 +53,6 @@ class FineTune():
             os.makedirs(log_dir)
         self.log_file = os.path.join(log_dir, '_'.join(['finetune', os.path.basename(model_path), 
                                                        os.path.basename(dataset_dict['path']+'.txt')]))
-        print(f'Metrics are written to {self.log_file}')
 
     def tokenize(self):
         if(self.paraphrase):
