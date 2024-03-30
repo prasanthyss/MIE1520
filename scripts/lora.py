@@ -67,7 +67,7 @@ class PEFT(FineTune):
 
         # set the log file
         log_dir = os.path.join(os.path.dirname(os.getcwd()), 'logs')
-        self.log_file = os.path.join(log_dir, '_'.join(['lora', os.path.basename(model_path), 
+        self.log_file = os.path.join(log_dir, '_'.join(['lora95', os.path.basename(model_path), 
                                                        os.path.basename(dataset_dict['path']+'.txt')]))
         self.train_acc = train_acc
         self.test_acc = test_acc
@@ -145,8 +145,9 @@ class PEFT(FineTune):
 
         def write_logs():
             with open(self.log_file, "a") as file:
-                for line in self.log_lines:
-                    file.write(line)
+                file.write(str(datetime.now())+"\n")
+                lines = "\n".join(self.log_lines)
+                file.write(lines)
             print(f"Results are appended to {self.log_file}")
     
         # save results at the end
