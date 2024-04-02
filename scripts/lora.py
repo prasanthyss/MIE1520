@@ -65,7 +65,7 @@ class PEFT(FineTune):
     
         self.log_lines = []
         
-    def train(self, num_epochs=6):
+    def train(self, num_epochs=6, lr=5e-5):
         lora_ranks = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]
         callback = AccuracyStoppingCallback(self.train_acc, self.test_acc, num_epochs)
 
@@ -106,6 +106,7 @@ class PEFT(FineTune):
             
 
         for lora_rank in lora_ranks:
+            print(f"Training with the following lora_rank: {lora_rank}")
             if (callback.reached_accuracy):
                 break
             config = LoraConfig(task_type=TaskType.SEQ_CLS, inference_mode=False, r=lora_rank, lora_alpha=32)
@@ -127,7 +128,8 @@ class PEFT(FineTune):
                 train_dataset=self.tokenized_dataset['train'],
                 eval_dataset=self.tokenized_dataset,
                 compute_metrics=compute_metrics,
-                callbacks=[callback]
+                callbacks=[callback],
+                learning_rate=lr
             )
 
             self.trainer.train()
@@ -155,6 +157,8 @@ parser.add_argument('--dataset', type=str, choices=['MRPC', 'QQP', 'SST', 'ANLI'
                     help="Please specify the dataset to finetune", required=True)
 parser.add_argument('--n_epochs', type=int, 
                     help="Default epochs is 6", default=6)
+parser.add_argument('--lr', type=float, 
+                    help="Learning rate to train the model.", default=5e-5)
 
 def main():
     args = parser.parse_args()
@@ -162,13 +166,14 @@ def main():
     model_path = args.model
     dataset_path = args.dataset
     num_epochs = args.n_epochs
+    lr = args.lr
 
     results_dict = collect_data("finetune")
     task = '_'.join([os.path.basename(models_dict[model_path]), os.path.basename(datasets_dict[dataset_path]['path'])])
     train_acc, test_acc = results_dict[task]['train'], results_dict[task]['test']
 
     model = PEFT(models_dict[model_path], datasets_dict[dataset_path], train_acc, test_acc)
-    model.train(num_epochs=num_epochs)
+    model.train(num_epochs=num_epochs, lr=lr)
 
 if __name__ == "__main__":
     main()

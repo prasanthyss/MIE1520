@@ -7,7 +7,7 @@
 from datasets import load_dataset
 from transformers import AutoTokenizer
 from transformers import AutoModelForSequenceClassification
-from transformers import TrainingArguments, Trainer
+from transformers import TrainingArguments, Trainer, get_cosine_schedule_with_warmup
 import os
 from datetime import datetime
 import evaluate
@@ -71,7 +71,8 @@ class FineTune():
 
         return tokenized_dataset
 
-    def train(self, num_epochs=6):
+    def train(self, num_epochs=6, lr=5e-5):
+        
         training_args = TrainingArguments(output_dir="logs", 
                                           num_train_epochs=num_epochs, 
                                           evaluation_strategy="epoch",
@@ -82,6 +83,7 @@ class FineTune():
             predictions, labels = eval_pred
             predictions = np.argmax(predictions, axis=1)
             return accuracy.compute(predictions=predictions, references=labels)
+        
 
         self.trainer = Trainer(
             model=self.model,
@@ -89,6 +91,7 @@ class FineTune():
             train_dataset=self.tokenized_dataset['train'],
             eval_dataset=self.tokenized_dataset,
             compute_metrics=compute_metrics,
+            learning_rate=lr
         )
 
         self.trainer.train()
@@ -115,6 +118,8 @@ parser.add_argument('--dataset', type=str, choices=['MRPC', 'QQP', 'SST', 'ANLI'
                     help="Please specify the dataset to finetune", required=True)
 parser.add_argument('--n_epochs', type=int, 
                     help="Default epochs is 6", default=6)
+parser.add_argument('--lr', type=float, 
+                    help="Learning rate to train the model.", default=5e-5)
 
 def main():
     args = parser.parse_args()
@@ -122,9 +127,10 @@ def main():
     model_name = args.model
     dataset_name = args.dataset
     num_epochs = args.n_epochs
+    lr = args.lr
 
     model = FineTune(models_dict[model_name], datasets_dict[dataset_name])
-    model.train(num_epochs=num_epochs)
+    model.train(num_epochs=num_epochs, lr=lr)
 
 if __name__ == "__main__":
     main()
