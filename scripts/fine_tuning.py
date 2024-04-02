@@ -128,7 +128,7 @@ def main():
     dataset_name = args.dataset
     num_epochs = args.n_epochs
     lr = args.lr
-
+    print(f"Training with following args model:{model_name}, dataset:{dataset_name}, epochs:{num_epochs}, initial_lr:{lr}")
     model = FineTune(models_dict[model_name], datasets_dict[dataset_name])
     model.train(num_epochs=num_epochs, lr=lr)
 
