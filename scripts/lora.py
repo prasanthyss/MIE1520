@@ -29,18 +29,23 @@ class AccuracyStoppingCallback(TrainerCallback):
         stop training when we reach 95% train and test accuracy or reach max_epochs.
         """
         
-        bools_dict = {"90_train": self.reached_90_train_acc, 
-                      "90_test": self.reached_90_test_acc,
-                      "95_train": self.reached_95_train_acc,
-                      "95_test": self.reached_95_test_acc}
-        
         def set_bool(var_name, metric_key):
 
             acc = self.train_accuracy if('train' in var_name) else self.test_accuracy
             acc = 0.9*acc if('90' in var_name) else 0.95*acc
 
             try:
-                bools_dict[var_name] = (metrics[metric_key] >= acc)
+                # metrics might not have metric key
+                if('train' in var_name):
+                    if('90' in var_name):
+                        self.reached_90_train_acc = (metrics[metric_key] >= acc)
+                    else:
+                        self.reached_95_train_acc = (metrics[metric_key] >= acc)
+                else:
+                    if('90' in var_name):
+                        self.reached_90_test_acc = (metrics[metric_key] >= acc)
+                    else:
+                        self.reached_95_test_acc = (metrics[metric_key] >= acc)
             except:
                 pass
 
@@ -114,7 +119,8 @@ class PEFT(FineTune):
             training_args = TrainingArguments(output_dir="logs", 
                                             num_train_epochs=num_epochs, 
                                             evaluation_strategy="epoch",
-                                            save_strategy="no")
+                                            save_strategy="no",
+                                            learning_rate=lr)
 
             accuracy = evaluate.load("accuracy")
             def compute_metrics(eval_pred):
@@ -128,9 +134,7 @@ class PEFT(FineTune):
                 train_dataset=self.tokenized_dataset['train'],
                 eval_dataset=self.tokenized_dataset,
                 compute_metrics=compute_metrics,
-                callbacks=[callback],
-                learning_rate=lr
-            )
+                callbacks=[callback])
 
             self.trainer.train()
             # append logs to log lines
