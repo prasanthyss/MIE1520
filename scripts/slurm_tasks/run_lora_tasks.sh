@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=lora_95
+#SBATCH --job-name=lora_90
 #SBATCH --nodes=1
 #SBATCH --mem=32G
 #SBATCH --gres=gpu:1

@@ -49,7 +49,7 @@ class AccuracyStoppingCallback(TrainerCallback):
         set_bool('95_train', 'eval_train_accuracy')
         set_bool('95_test', 'eval_test_accuracy')
         
-        self.reached_accuracy= (self.reached_95_train_acc and self.reached_95_test_acc)
+        self.reached_accuracy = (self.reached_90_train_acc and self.reached_90_test_acc)
         control.should_training_stop = (self.reached_accuracy or metrics['epoch'] >= self.num_epochs)
 
 class PEFT(FineTune):
@@ -58,7 +58,7 @@ class PEFT(FineTune):
 
         # set the log file
         log_dir = os.path.join(os.path.dirname(os.getcwd()), 'logs')
-        self.log_file = os.path.join(log_dir, '_'.join(['lora95', os.path.basename(model_path), 
+        self.log_file = os.path.join(log_dir, '_'.join(['lora90', os.path.basename(model_path), 
                                                        os.path.basename(dataset_dict['path']+'.txt')]))
         self.train_acc = train_acc
         self.test_acc = test_acc
