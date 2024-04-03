@@ -72,11 +72,14 @@ class FineTune():
         return tokenized_dataset
 
     def train(self, num_epochs=6, lr=5e-5):
-        
-        training_args = TrainingArguments(output_dir="logs", 
-                                          num_train_epochs=num_epochs, 
-                                          evaluation_strategy="epoch",
-                                          save_strategy="no")
+
+        training_args = TrainingArguments(output_dir="logs",
+                                          per_device_train_batch_size=8,
+                                          num_train_epochs=num_epochs,
+                                          evaluation_strategy="steps",
+                                          eval_steps=100,
+                                          save_strategy="no",
+                                          learning_rate=lr)
 
         accuracy = evaluate.load("accuracy")
         def compute_metrics(eval_pred):
@@ -90,9 +93,7 @@ class FineTune():
             args=training_args,
             train_dataset=self.tokenized_dataset['train'],
             eval_dataset=self.tokenized_dataset,
-            compute_metrics=compute_metrics,
-            learning_rate=lr
-        )
+            compute_metrics=compute_metrics)
 
         self.trainer.train()
 
@@ -128,6 +129,7 @@ def main():
     dataset_name = args.dataset
     num_epochs = args.n_epochs
     lr = args.lr
+
     print(f"Training with following args model:{model_name}, dataset:{dataset_name}, epochs:{num_epochs}, initial_lr:{lr}")
     model = FineTune(models_dict[model_name], datasets_dict[dataset_name])
     model.train(num_epochs=num_epochs, lr=lr)

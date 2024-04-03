@@ -18,17 +18,19 @@ def process_txt_files(folder_path):
         if filename.endswith(".txt"):
             file_path = os.path.join(folder_path, filename)
             with open(file_path, 'r') as file:
-                # Read the second line from the file
                 lines = file.readlines()
-                if len(lines) >= 2:
-                    second_line = lines[1].strip()
-                    second_line = replace_quotes(second_line)
-                    line = second_line
+                # Read the last line containing logs from the .txt file
+                line_to_write = ""
+                for line in lines:
+                    if(line[0] == '['):
+                        line_to_write = line
+                line_to_write = line_to_write.strip()
+                line_to_write = replace_quotes(line_to_write)
 
             json_file = os.path.splitext(file_path)[0] + '.json'
+            # write the line to a json file
             with open(json_file, 'w') as file:
-                # Read the second line from the file
-                file.write(line)
+                file.write(line_to_write)
 
 folder_path = os.path.join(os.path.dirname(os.getcwd()), 'logs')
 process_txt_files(folder_path)
