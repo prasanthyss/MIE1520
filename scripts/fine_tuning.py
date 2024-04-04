@@ -22,10 +22,11 @@ datasets_dict = {'MRPC': {'path': "SetFit/mrpc", 'data': ['text1', 'text2'], 'sp
                  'SST': {'path': "stanfordnlp/sst2", 'data': ['sentence'], 'split': 'train'},
                  'ANLI': {'path': "facebook/anli", 'data': ['premise', 'hypothesis'], 'split': 'train_r1'}}
 
-models_dict = {'BERT-Base': "google-bert/bert-base-uncased",
-               'BERT-Large': "google-bert/bert-large-uncased",
-               'RoBERTa-Base': "FacebookAI/roberta-base",
-               'RoBERTa-Large': "FacebookAI/roberta-large"}
+models_dict = {'Tiny-BERT': "huawei-noah/TinyBERT_General_4L_312D",
+                'BERT-Base': "google-bert/bert-base-uncased",
+                'BERT-Large': "google-bert/bert-large-uncased",
+                'RoBERTa-Base': "FacebookAI/roberta-base",
+                'RoBERTa-Large': "FacebookAI/roberta-large"}
 
 
 # In[7]:
@@ -65,7 +66,7 @@ class FineTune():
             self.data = self.data[0]
 
         def tokenize_function(examples):
-            return self.tokenizer(examples[self.data], padding="max_length", truncation=True)
+            return self.tokenizer(examples[self.data], padding=True, truncation=True, max_length=256)
 
         tokenized_dataset = self.dataset.map(tokenize_function, batched=True)
 
@@ -76,6 +77,7 @@ class FineTune():
         training_args = TrainingArguments(output_dir="../logs",
                                           num_train_epochs=num_epochs,
                                           evaluation_strategy="steps",
+                                          weight_decay=0.01,
                                           eval_steps=100,
                                           save_strategy="no")
         if lr is not None:
@@ -83,8 +85,8 @@ class FineTune():
 
         accuracy = evaluate.load("accuracy")
         def compute_metrics(eval_pred):
-            predictions, labels = eval_pred
-            predictions = np.argmax(predictions, axis=1)
+            logits, labels = eval_pred
+            predictions = np.argmax(logits, axis=-1)
             return accuracy.compute(predictions=predictions, references=labels)
         
 
@@ -113,7 +115,7 @@ import argparse
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument('--model', type=str, choices=['BERT-Base', 'BERT-Large', 'RoBERTa-Base', 'RoBERTa-Large'], 
+parser.add_argument('--model', type=str, choices=['Tiny-BERT', 'BERT-Base', 'BERT-Large', 'RoBERTa-Base', 'RoBERTa-Large'], 
                     help="Please pass the model you want to train", required=True)
 parser.add_argument('--dataset', type=str, choices=['MRPC', 'QQP', 'SST', 'ANLI'], 
                     help="Please specify the dataset to finetune", required=True)
@@ -130,7 +132,7 @@ def main():
     num_epochs = args.n_epochs
     lr = args.lr
 
-    print(f"Training with following args model:{model_name}, dataset:{dataset_name}, epochs:{num_epochs}, initial_lr:{lr}\n")
+    print(f"Training with following args:- model:{model_name}, dataset:{dataset_name}, epochs:{num_epochs}, initial_lr:{lr}\n")
     model = FineTune(models_dict[model_name], datasets_dict[dataset_name])
     model.train(num_epochs=num_epochs, lr=lr)
 
