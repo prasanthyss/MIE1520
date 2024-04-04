@@ -19,7 +19,7 @@ import numpy as np
 
 datasets_dict = {'MRPC': {'path': "SetFit/mrpc", 'data': ['text1', 'text2'], 'split': 'train'},
                  'QQP': {'path': "SetFit/qqp", 'data': ['text1', 'text2'], 'split': 'train'},
-                 'SST': {'path': "sst2", 'data': ['sentence'], 'split': 'train'},
+                 'SST': {'path': "stanfordnlp/sst2", 'data': ['sentence'], 'split': 'train'},
                  'ANLI': {'path': "facebook/anli", 'data': ['premise', 'hypothesis'], 'split': 'train_r1'}}
 
 models_dict = {'BERT-Base': "google-bert/bert-base-uncased",
@@ -34,19 +34,19 @@ models_dict = {'BERT-Base': "google-bert/bert-base-uncased",
 class FineTune():
     def __init__(self, model_path, dataset_dict):
         # Load the dataset
-        print(f"Loading the dataset from {dataset_dict['path']}")
+        print(f"Loading the dataset from {dataset_dict['path']}\n")
         self.dataset = load_dataset(dataset_dict['path'], split = dataset_dict['split'])
         self.data = dataset_dict['data']
         # Task is paraphrasing if we have more than one data column
         self.paraphrase = (len(self.data) != 1)
 
-        print('Generating tokens for the dataset')
+        print('Generating tokens for the dataset\n')
         self.tokenizer =  AutoTokenizer.from_pretrained(model_path)
         tokenized_dataset = self.tokenize()
         self.tokenized_dataset = tokenized_dataset.train_test_split(test_size=0.1)
         self.num_labels = len(set(self.dataset['label']))
 
-        print(f'Loading the model from {model_path}')
+        print(f'Loading the model from {model_path}\n')
         self.model = AutoModelForSequenceClassification.from_pretrained(model_path, num_labels=self.num_labels)
         log_dir = os.path.join(os.path.dirname(os.getcwd()), 'logs')
         if not os.path.exists(log_dir):
@@ -71,15 +71,15 @@ class FineTune():
 
         return tokenized_dataset
 
-    def train(self, num_epochs=6, lr=5e-5):
+    def train(self, num_epochs=6, lr=None):
 
-        training_args = TrainingArguments(output_dir="logs",
-                                          per_device_train_batch_size=8,
+        training_args = TrainingArguments(output_dir="../logs",
                                           num_train_epochs=num_epochs,
                                           evaluation_strategy="steps",
                                           eval_steps=100,
-                                          save_strategy="no",
-                                          learning_rate=lr)
+                                          save_strategy="no")
+        if lr is not None:
+            training_args.learning_rate=lr
 
         accuracy = evaluate.load("accuracy")
         def compute_metrics(eval_pred):
@@ -120,7 +120,7 @@ parser.add_argument('--dataset', type=str, choices=['MRPC', 'QQP', 'SST', 'ANLI'
 parser.add_argument('--n_epochs', type=int, 
                     help="Default epochs is 6", default=6)
 parser.add_argument('--lr', type=float, 
-                    help="Learning rate to train the model.", default=5e-5)
+                    help="Learning rate to train the model.", default=None)
 
 def main():
     args = parser.parse_args()
@@ -130,9 +130,11 @@ def main():
     num_epochs = args.n_epochs
     lr = args.lr
 
-    print(f"Training with following args model:{model_name}, dataset:{dataset_name}, epochs:{num_epochs}, initial_lr:{lr}")
+    print(f"Training with following args model:{model_name}, dataset:{dataset_name}, epochs:{num_epochs}, initial_lr:{lr}\n")
     model = FineTune(models_dict[model_name], datasets_dict[dataset_name])
-    model.train(num_epochs=num_epochs, lr=lr)
+    print(f"num labels: {model.num_labels}")
+    print(model.model)
+    #model.train(num_epochs=num_epochs, lr=lr)
 
 if __name__ == "__main__":
     main()
