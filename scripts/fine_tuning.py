@@ -132,9 +132,7 @@ def main():
 
     print(f"Training with following args model:{model_name}, dataset:{dataset_name}, epochs:{num_epochs}, initial_lr:{lr}\n")
     model = FineTune(models_dict[model_name], datasets_dict[dataset_name])
-    print(f"num labels: {model.num_labels}")
-    print(model.model)
-    #model.train(num_epochs=num_epochs, lr=lr)
+    model.train(num_epochs=num_epochs, lr=lr)
 
 if __name__ == "__main__":
     main()
