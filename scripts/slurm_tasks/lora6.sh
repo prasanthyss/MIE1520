@@ -1,8 +1,8 @@
 #!/bin/bash
-#SBATCH --job-name=rlarge_qqp
+#SBATCH --job-name=qqp
 #SBATCH --nodes=1
 #SBATCH --mem=32G
-#SBATCH --gres=gpu:1
+#SBATCH -w overture --gres=gpu:1
 
 # task-1
-python3 ./lora.py --model RoBERTa-Large --dataset QQP --n_epochs 10
+python3 ./lora.py --model BERT-Base --dataset QQP --n_epochs 6
