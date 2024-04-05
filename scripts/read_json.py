@@ -72,9 +72,11 @@ def collect_data(finetune_type):
 
 
     # tasks
-    tasks = ['bert-base-uncased_anli', 'bert-large-uncased_anli', \
-                'roberta-base_anli', 'roberta-large_anli', 'roberta-large_mrpc',\
-                    'roberta-large_qqp', 'roberta-large_sst2']
+    model_names = ['bert-base-uncased', 'bert-large-uncased', 'roberta-base', 
+                   'roberta-large', 'dynamic_tinybert']
+    dataset_names = ['anli', 'mrpc', 'qqp', 'sst2']
+    tasks = ['_'.join([model_name, dataset_name]) 
+             for model_name in model_names for dataset_name in dataset_names] 
     
     for task in tasks:
       file_path = os.path.join(folderpath, '_'.join([finetune_type, task+'.json']))
