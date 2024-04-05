@@ -107,7 +107,7 @@ def main():
     file_path = args.file
     if(file_path is not None):
         # save the fig to plot_path
-        make_plot(train_loss, train_epochs, test_loss, test_epochs, plot_path)
+        make_plot(file_path)
     else:
         folder_path = args.folder
         if(folder_path is not None):
