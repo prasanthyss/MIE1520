@@ -60,7 +60,18 @@ def collect_data(file_path):
 
     return train_acc, train_epoch, test_acc, test_epoch
 
-def make_plot(train_loss, train_epochs, test_loss, test_epochs, plot_path):
+def make_plot(file_path):
+
+    json_path = process_txt_file(file_path)
+    train_loss, train_epochs, test_loss, test_epochs = collect_data(json_path)
+
+    # get the plot file path
+    plot_dir = os.path.join(os.path.dirname(json_path), 'figs')
+    if (not os.path.exists(plot_dir)):
+        os.makedirs(plot_dir)
+    plot_filename = os.path.splitext(os.path.basename(json_path))[0]
+    plot_path = os.path.join(plot_dir, plot_filename+'.png')
+    
     # Plot train vs test accuracies
     plt.plot(train_epochs, train_loss, marker='o', label='training loss')
     plt.plot(test_epochs, test_loss, marker='o', label='test loss')
@@ -85,24 +96,28 @@ import argparse
 parser = argparse.ArgumentParser()
 
 parser.add_argument('--file', type=str, 
-                    help="Path to the .txt file with trainer metrics", required=True)
+                    help="Path to the .txt file with trainer metrics", default=None)
+
+parser.add_argument('--folder', type=str,
+                    help="Path to logs folder", default=None)
 
 def main():
     args = parser.parse_args()
 
     file_path = args.file
-    json_path = process_txt_file(file_path)
-    train_loss, train_epochs, test_loss, test_epochs = collect_data(json_path)
+    if(file_path is not None):
+        # save the fig to plot_path
+        make_plot(train_loss, train_epochs, test_loss, test_epochs, plot_path)
+    else:
+        folder_path = args.folder
+        if(folder_path is not None):
+            for filename in os.listdir(folder_path):
+                if filename.endswith(".txt"):
+                    file_path = os.path.join(folder_path, filename)
+                    make_plot(file_path)
+        else:
+            raise FileNotFoundError("Please provide file or folder path")
 
-    # get the plot file path
-    plot_dir = os.path.join(os.path.dirname(json_path), 'figs')
-    if (not os.path.exists(plot_dir)):
-        os.makedirs(plot_dir)
-    plot_filename = os.path.splitext(os.path.basename(json_path))[0]
-    plot_path = os.path.join(plot_dir, plot_filename+'.png')
-
-    # save the fig to plot_path
-    make_plot(train_loss, train_epochs, test_loss, test_epochs, plot_path)
 
 if __name__ == "__main__":
     main()

@@ -22,7 +22,7 @@ datasets_dict = {'MRPC': {'path': "SetFit/mrpc", 'data': ['text1', 'text2'], 'sp
                  'SST': {'path': "stanfordnlp/sst2", 'data': ['sentence'], 'split': 'train'},
                  'ANLI': {'path': "facebook/anli", 'data': ['premise', 'hypothesis'], 'split': 'train_r1'}}
 
-models_dict = {'Tiny-BERT': "huawei-noah/TinyBERT_General_4L_312D",
+models_dict = {'Tiny-BERT': "Intel/dynamic_tinybert",
                 'BERT-Base': "google-bert/bert-base-uncased",
                 'BERT-Large': "google-bert/bert-large-uncased",
                 'RoBERTa-Base': "FacebookAI/roberta-base",
@@ -66,7 +66,7 @@ class FineTune():
             self.data = self.data[0]
 
         def tokenize_function(examples):
-            return self.tokenizer(examples[self.data], padding=True, truncation=True, max_length=256)
+            return self.tokenizer(examples[self.data], padding="max_length", truncation=True, max_length=64)
 
         tokenized_dataset = self.dataset.map(tokenize_function, batched=True)
 
@@ -77,8 +77,8 @@ class FineTune():
         training_args = TrainingArguments(output_dir="../logs",
                                           num_train_epochs=num_epochs,
                                           evaluation_strategy="steps",
-                                          weight_decay=0.01,
-                                          eval_steps=100,
+                                          #weight_decay=0.01,
+                                          eval_steps=1000,
                                           save_strategy="no")
         if lr is not None:
             training_args.learning_rate=lr
