@@ -72,13 +72,13 @@ class FineTune():
 
         return tokenized_dataset
 
-    def train(self, num_epochs=6, lr=None):
+    def train(self, num_epochs=6, lr=None, eval_steps):
 
         training_args = TrainingArguments(output_dir="../logs",
                                           num_train_epochs=num_epochs,
                                           evaluation_strategy="steps",
                                           #weight_decay=0.01,
-                                          eval_steps=1000,
+                                          eval_steps=eval_steps,
                                           save_strategy="no")
         if lr is not None:
             training_args.learning_rate=lr
@@ -123,6 +123,8 @@ parser.add_argument('--n_epochs', type=int,
                     help="Default epochs is 6", default=6)
 parser.add_argument('--lr', type=float, 
                     help="Learning rate to train the model.", default=None)
+parser.add_argument('--eval_steps', type=int, 
+                    help="Steps to evaluate model", default=1000)
 
 def main():
     args = parser.parse_args()
@@ -131,10 +133,11 @@ def main():
     dataset_name = args.dataset
     num_epochs = args.n_epochs
     lr = args.lr
+    eval_steps = args.eval_steps
 
     print(f"Training with following args:- model:{model_name}, dataset:{dataset_name}, epochs:{num_epochs}, initial_lr:{lr}\n")
     model = FineTune(models_dict[model_name], datasets_dict[dataset_name])
-    model.train(num_epochs=num_epochs, lr=lr)
+    model.train(num_epochs=num_epochs, lr=lr, eval_steps)
 
 if __name__ == "__main__":
     main()

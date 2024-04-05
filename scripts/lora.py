@@ -54,7 +54,7 @@ class AccuracyStoppingCallback(TrainerCallback):
         set_bool('95_train', 'eval_train_accuracy')
         set_bool('95_test', 'eval_test_accuracy')
         
-        self.reached_accuracy = (self.reached_90_train_acc and self.reached_90_test_acc)
+        self.reached_accuracy = (self.reached_95_train_acc and self.reached_95_test_acc)
         control.should_training_stop = (self.reached_accuracy or metrics['epoch'] >= self.num_epochs)
 
 class PEFT(FineTune):
@@ -63,14 +63,14 @@ class PEFT(FineTune):
 
         # set the log file
         log_dir = os.path.join(os.path.dirname(os.getcwd()), 'logs')
-        self.log_file = os.path.join(log_dir, '_'.join(['lora90', os.path.basename(model_path), 
+        self.log_file = os.path.join(log_dir, '_'.join(['lora', os.path.basename(model_path), 
                                                        os.path.basename(dataset_dict['path']+'.txt')]))
         self.train_acc = train_acc
         self.test_acc = test_acc
     
         self.log_lines = []
         
-    def train(self, num_epochs=6, lr=5e-5):
+    def train(self, num_epochs=6, lr=None, eval_steps):
         lora_ranks = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]
         callback = AccuracyStoppingCallback(self.train_acc, self.test_acc, num_epochs)
 
@@ -116,11 +116,15 @@ class PEFT(FineTune):
                 break
             config = LoraConfig(task_type=TaskType.SEQ_CLS, inference_mode=False, r=lora_rank, lora_alpha=32)
             model = get_peft_model(self.model, config)
-            training_args = TrainingArguments(output_dir="logs", 
-                                            num_train_epochs=num_epochs, 
-                                            evaluation_strategy="epoch",
-                                            save_strategy="no",
-                                            learning_rate=lr)
+            training_args = TrainingArguments(output_dir="../logs",
+                                          num_train_epochs=num_epochs,
+                                          evaluation_strategy="steps",
+                                          #weight_decay=0.01,
+                                          eval_steps=eval_steps,
+                        
+                                          save_strategy="no")
+            if lr is not None:
+                training_args.learning_rate=lr
 
             accuracy = evaluate.load("accuracy")
             def compute_metrics(eval_pred):
@@ -163,6 +167,8 @@ parser.add_argument('--n_epochs', type=int,
                     help="Default epochs is 6", default=6)
 parser.add_argument('--lr', type=float, 
                     help="Learning rate to train the model.", default=5e-5)
+parser.add_argument('--eval_steps', type=int, 
+                    help="Steps to evaluate model", default=1000)
 
 def main():
     args = parser.parse_args()
@@ -171,13 +177,14 @@ def main():
     dataset_path = args.dataset
     num_epochs = args.n_epochs
     lr = args.lr
+    eval_steps = args.eval_steps
 
     results_dict = collect_data("finetune")
     task = '_'.join([os.path.basename(models_dict[model_path]), os.path.basename(datasets_dict[dataset_path]['path'])])
     train_acc, test_acc = results_dict[task]['train'], results_dict[task]['test']
 
     model = PEFT(models_dict[model_path], datasets_dict[dataset_path], train_acc, test_acc)
-    model.train(num_epochs=num_epochs, lr=lr)
+    model.train(num_epochs=num_epochs, lr=lr, eval_steps)
 
 if __name__ == "__main__":
     main()
