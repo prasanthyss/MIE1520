@@ -41,29 +41,33 @@ def collect_data(file_path):
         return data
 
     def collect_accuracy(json_data):
-        train_loss = []
-        train_epochs = []
-        test_loss = []
-        test_epochs = []
+        train_loss=[]
+        train_epochs=[]
+        train_accuracy=[]
+        test_loss=[]
+        test_epochs=[]
+        test_accuracy=[]
         for data in json_data:
             if 'eval_train_accuracy' in data:
                 train_loss.append(data['eval_train_loss'])
+                train_accuracy.append(data['eval_train_accuracy'])
                 train_epochs.append(data['epoch'])
             if 'eval_test_accuracy' in data:
                 test_loss.append(data['eval_test_loss'])
+                test_accuracy.append(data['eval_test_accuracy'])
                 test_epochs.append(data['epoch'])
         
-        return train_loss, train_epochs, test_loss, test_epochs
+        return train_loss, train_accuracy, train_epochs, test_loss, test_accuracy, test_epochs
     
     json_data = read_json_file(file_path)
-    train_acc, train_epoch, test_acc, test_epoch = collect_accuracy(json_data)
+    train_loss, train_accuracy, train_epochs, test_loss, test_accuracy, test_epochs = collect_accuracy(json_data)
 
-    return train_acc, train_epoch, test_acc, test_epoch
+    return train_loss, train_accuracy, train_epochs, test_loss, test_accuracy, test_epochs
 
 def make_plot(file_path):
 
     json_path = process_txt_file(file_path)
-    train_loss, train_epochs, test_loss, test_epochs = collect_data(json_path)
+    train_loss, train_accuracy, train_epochs, test_loss, test_accuracy, test_epochs = collect_data(json_path)
 
     # get the plot file path
     plot_dir = os.path.join(os.path.dirname(json_path), 'figs')
@@ -72,15 +76,27 @@ def make_plot(file_path):
     plot_filename = os.path.splitext(os.path.basename(json_path))[0]
     plot_path = os.path.join(plot_dir, plot_filename+'.png')
     
-    # Plot train vs test accuracies
-    plt.plot(train_epochs, train_loss, marker='o', label='training loss')
-    plt.plot(test_epochs, test_loss, marker='o', label='test loss')
+    # Create a figure and a set of subplots
+    fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(12, 6))
 
-    # Labeling axes
-    plt.xlabel('epochs')
-    plt.ylabel('loss')
-    
-    plt.legend()
+    # First subplot: Accuracy vs Epochs
+    ax[0].plot(train_epochs, train_loss, 'r-', label='train loss')
+    ax[0].plot(test_epochs, test_loss, 'b-', label='test loss')
+    ax[0].set_xlabel('Epochs')
+    ax[0].set_ylabel('Loss')
+    ax[0].set_title('Loss vs Epochs')
+    ax[0].legend()
+
+    # Second subplot: Loss vs Epochs
+    ax[1].plot(train_epochs, train_accuracy, 'r-', label='train ccuracy')
+    ax[1].plot(test_epochs, test_accuracy, 'b-', label='train ccuracy')
+    ax[1].set_xlabel('Epochs')
+    ax[1].set_ylabel('Accuracy')
+    ax[1].set_title('Accuracy vs Epochs')
+    ax[1].legend()
+
+    title = os.path.splitext(os.path.basename(file_path))[0]
+    fig.suptitle(title, fontsize=16)
 
     # Save plot to a file
     plt.savefig(plot_path)
