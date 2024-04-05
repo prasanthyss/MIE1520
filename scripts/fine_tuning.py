@@ -72,7 +72,7 @@ class FineTune():
 
         return tokenized_dataset
 
-    def train(self, num_epochs=6, lr=None, eval_steps):
+    def train(self, num_epochs=6, lr=None, eval_steps=1000):
 
         training_args = TrainingArguments(output_dir="../logs",
                                           num_train_epochs=num_epochs,
@@ -137,7 +137,7 @@ def main():
 
     print(f"Training with following args:- model:{model_name}, dataset:{dataset_name}, epochs:{num_epochs}, initial_lr:{lr}\n")
     model = FineTune(models_dict[model_name], datasets_dict[dataset_name])
-    model.train(num_epochs=num_epochs, lr=lr, eval_steps)
+    model.train(num_epochs=num_epochs, lr=lr, eval_steps=eval_steps)
 
 if __name__ == "__main__":
     main()
