@@ -18,8 +18,8 @@ class AccuracyStoppingCallback(TrainerCallback):
         self.num_epochs = num_epochs
         self.reached_accuracy = False
 
-        self.reached_90_train_acc = False
-        self.reached_90_test_acc = False
+        self.reached_95_train_acc = False
+        self.reached_95_test_acc = False
         self.reached_99_train_acc = False
         self.reached_99_test_acc = False
 
@@ -33,25 +33,25 @@ class AccuracyStoppingCallback(TrainerCallback):
         def set_bool(var_name, metric_key):
 
             acc = self.train_accuracy if('train' in var_name) else self.test_accuracy
-            acc = 0.9*acc if('90' in var_name) else 0.99*acc
+            acc = 0.95*acc if('95' in var_name) else 0.99*acc
 
             try:
                 # metrics might not have metric key
                 if('train' in var_name):
-                    if('90' in var_name):
-                        self.reached_90_train_acc = (metrics[metric_key] >= acc)
+                    if('95' in var_name):
+                        self.reached_95_train_acc = (metrics[metric_key] >= acc)
                     else:
                         self.reached_99_train_acc = (metrics[metric_key] >= acc)
                 else:
-                    if('90' in var_name):
-                        self.reached_90_test_acc = (metrics[metric_key] >= acc)
+                    if('95' in var_name):
+                        self.reached_95_test_acc = (metrics[metric_key] >= acc)
                     else:
                         self.reached_99_test_acc = (metrics[metric_key] >= acc)
             except:
                 pass
 
-        set_bool('90_train', 'eval_train_accuracy')
-        set_bool('90_test', 'eval_test_accuracy')
+        set_bool('95_train', 'eval_train_accuracy')
+        set_bool('95_test', 'eval_test_accuracy')
         set_bool('99_train', 'eval_train_accuracy')
         set_bool('99_test', 'eval_test_accuracy')
         
@@ -75,8 +75,8 @@ class PEFT(FineTune):
         lora_ranks = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]
         callback = AccuracyStoppingCallback(self.train_acc, self.test_acc, num_epochs)
 
-        self.logged_90_train = False
-        self.logged_90_test = False
+        self.logged_95_train = False
+        self.logged_95_test = False
         self.logged_99_train = False
         self.logged_99_test = False
 
@@ -90,15 +90,15 @@ class PEFT(FineTune):
             self.log_lines.append(str(self.trainer.state.log_history) + "\n\n")
     
             # write first ranks to reach given accuracies at the beginning of the log file.
-            if (not self.logged_90_train and callback.reached_90_train_acc):
-                self.log_lines = ["90_train: " + str(datetime.now()) + " lora_rank: " + str(lora_rank) +  " num_params: " + 
+            if (not self.logged_95_train and callback.reached_95_train_acc):
+                self.log_lines = ["95_train: " + str(datetime.now()) + " lora_rank: " + str(lora_rank) +  " num_params: " + 
                                     str(model.get_nb_trainable_parameters())] + self.log_lines
-                self.logged_90_train = True
+                self.logged_95_train = True
         
-            if (not self.logged_90_test and callback.reached_90_test_acc):
-                self.log_lines = ["90_test: " + str(datetime.now()) + " lora_rank: " + str(lora_rank) +  " num_params: " + 
+            if (not self.logged_95_test and callback.reached_95_test_acc):
+                self.log_lines = ["95_test: " + str(datetime.now()) + " lora_rank: " + str(lora_rank) +  " num_params: " + 
                                     str(model.get_nb_trainable_parameters())] + self.log_lines
-                self.logged_90_test = True
+                self.logged_95_test = True
                 
             if (not self.logged_99_train and callback.reached_99_train_acc):
                 self.log_lines = ["99_train: " + str(datetime.now()) + " lora_rank: " + str(lora_rank) +  " num_params: " + 
