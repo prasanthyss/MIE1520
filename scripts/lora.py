@@ -148,7 +148,7 @@ class PEFT(FineTune):
         def write_logs():
             with open(self.log_file, "a") as file:
                 file.write(str(datetime.now())+"\n")
-                file.write(f"training_accuracy: {self.train_acc}, test_accuracy{self.test_acc}\n")
+                file.write(f"training_accuracy: {self.train_acc}, test_accuracy: {self.test_acc}\n")
                 lines = "\n".join(self.log_lines)
                 file.write(lines)
             print(f"Results are appended to {self.log_file}")
