@@ -72,7 +72,7 @@ class PEFT(FineTune):
         self.log_lines = []
         
     def train(self, num_epochs=6, lr=None, eval_steps=1000):
-        lora_ranks = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]
+        lora_ranks = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]
         callback = AccuracyStoppingCallback(self.train_acc, self.test_acc, num_epochs)
 
         self.logged_95_train = False
