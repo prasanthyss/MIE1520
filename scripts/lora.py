@@ -20,19 +20,20 @@ class AccuracyStoppingCallback(TrainerCallback):
 
         self.reached_90_train_acc = False
         self.reached_90_test_acc = False
-        self.reached_95_train_acc = False
-        self.reached_95_test_acc = False
+        self.reached_99_train_acc = False
+        self.reached_99_test_acc = False
+
 
     def on_evaluate(self, args, state, control, metrics, **kwargs):
         """ 
         call back called on evaluate.
-        stop training when we reach 95% train and test accuracy or reach max_epochs.
+        stop training when we reach 99% train and test accuracy or reach max_epochs.
         """
         
         def set_bool(var_name, metric_key):
 
             acc = self.train_accuracy if('train' in var_name) else self.test_accuracy
-            acc = 0.9*acc if('90' in var_name) else 0.95*acc
+            acc = 0.9*acc if('90' in var_name) else 0.99*acc
 
             try:
                 # metrics might not have metric key
@@ -40,21 +41,21 @@ class AccuracyStoppingCallback(TrainerCallback):
                     if('90' in var_name):
                         self.reached_90_train_acc = (metrics[metric_key] >= acc)
                     else:
-                        self.reached_95_train_acc = (metrics[metric_key] >= acc)
+                        self.reached_99_train_acc = (metrics[metric_key] >= acc)
                 else:
                     if('90' in var_name):
                         self.reached_90_test_acc = (metrics[metric_key] >= acc)
                     else:
-                        self.reached_95_test_acc = (metrics[metric_key] >= acc)
+                        self.reached_99_test_acc = (metrics[metric_key] >= acc)
             except:
                 pass
 
         set_bool('90_train', 'eval_train_accuracy')
         set_bool('90_test', 'eval_test_accuracy')
-        set_bool('95_train', 'eval_train_accuracy')
-        set_bool('95_test', 'eval_test_accuracy')
+        set_bool('99_train', 'eval_train_accuracy')
+        set_bool('99_test', 'eval_test_accuracy')
         
-        self.reached_accuracy = (self.reached_95_train_acc and self.reached_95_test_acc)
+        self.reached_accuracy = (self.reached_99_train_acc and self.reached_99_test_acc)
         control.should_training_stop = (self.reached_accuracy or metrics['epoch'] >= self.num_epochs)
 
 class PEFT(FineTune):
@@ -76,8 +77,8 @@ class PEFT(FineTune):
 
         self.logged_90_train = False
         self.logged_90_test = False
-        self.logged_95_train = False
-        self.logged_95_test = False
+        self.logged_99_train = False
+        self.logged_99_test = False
 
         def append_to_logs():
             """
@@ -99,15 +100,15 @@ class PEFT(FineTune):
                                     str(model.get_nb_trainable_parameters())] + self.log_lines
                 self.logged_90_test = True
                 
-            if (not self.logged_95_train and callback.reached_95_train_acc):
-                self.log_lines = ["95_train: " + str(datetime.now()) + " lora_rank: " + str(lora_rank) +  " num_params: " + 
+            if (not self.logged_99_train and callback.reached_99_train_acc):
+                self.log_lines = ["99_train: " + str(datetime.now()) + " lora_rank: " + str(lora_rank) +  " num_params: " + 
                                     str(model.get_nb_trainable_parameters())] + self.log_lines
-                self.logged_95_train = True
+                self.logged_99_train = True
                 
-            if (not self.logged_95_test and callback.reached_95_test_acc):
-                self.log_lines = ["95_test: " + str(datetime.now()) + " lora_rank: " + str(lora_rank) +  " num_params: " + 
+            if (not self.logged_99_test and callback.reached_99_test_acc):
+                self.log_lines = ["99_test: " + str(datetime.now()) + " lora_rank: " + str(lora_rank) +  " num_params: " + 
                                     str(model.get_nb_trainable_parameters())] + self.log_lines
-                self.logged_95_test = True
+                self.logged_99_test = True
             
 
         for lora_rank in lora_ranks:
