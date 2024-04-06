@@ -147,6 +147,7 @@ class PEFT(FineTune):
         def write_logs():
             with open(self.log_file, "a") as file:
                 file.write(str(datetime.now())+"\n")
+                file.write(f"training_accuracy: {self.train_acc}, test_accuracy{self.test_acc}\n")
                 lines = "\n".join(self.log_lines)
                 file.write(lines)
             print(f"Results are appended to {self.log_file}")
@@ -159,7 +160,7 @@ import argparse
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument('--model', type=str, choices=['BERT-Base', 'BERT-Large', 'RoBERTa-Base', 'RoBERTa-Large'], 
+parser.add_argument('--model', type=str, choices=['Tiny-BERT', 'BERT-Base', 'BERT-Large', 'RoBERTa-Base', 'RoBERTa-Large'], 
                     help="Please pass the model you want to train", required=True)
 parser.add_argument('--dataset', type=str, choices=['MRPC', 'QQP', 'SST', 'ANLI'], 
                     help="Please specify the dataset to finetune", required=True)
