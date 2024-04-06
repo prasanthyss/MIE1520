@@ -32,9 +32,6 @@ def process_txt_files(folder_path):
             with open(json_file, 'w') as file:
                 file.write(line_to_write)
 
-folder_path = os.path.join(os.path.dirname(os.getcwd()), 'logs')
-process_txt_files(folder_path)
-
 # %% [markdown]
 # ## Read Json Files
 
