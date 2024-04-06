@@ -1,0 +1,27 @@
+2024-04-06 00:37:31.043233
+training_accuracy: 0.46980895502689146, test_accuracy0.46057906458797326
+95_test: 2024-04-06 00:37:31.041325 lora_rank: 1 num_params: (628994, 125276164)
+95_train: 2024-04-06 00:37:31.040523 lora_rank: 1 num_params: (628994, 125276164)
+90_test: 2024-04-06 00:37:31.039712 lora_rank: 1 num_params: (628994, 125276164)
+90_train: 2024-04-06 00:37:31.038888 lora_rank: 1 num_params: (628994, 125276164)
+2024-04-06 00:37:31.037866 lora_rank: 1 num_params: (628994, 125276164)
+[{'loss': 0.5347, 'grad_norm': 99.05269622802734, 'learning_rate': 4.945009018520963e-05, 'epoch': 0.07, 'step': 500}, {'loss': 0.396, 'grad_norm': 9.790562629699707, 'learning_rate': 4.890018037041925e-05, 'epoch': 0.13, 'step': 1000}, {'eval_train_loss': 0.2900081276893616, 'eval_train_accuracy': 0.90025406671726, 'eval_train_runtime': 75.3559, 'eval_train_samples_per_second': 804.37, 'eval_train_steps_per_second': 100.55, 'epoch': 0.13, 'step': 1000}, {'eval_test_loss': 0.2903420031070709, 'eval_test_accuracy': 0.8993318485523385, 'eval_test_runtime': 8.3493, 'eval_test_samples_per_second': 806.651, 'eval_test_steps_per_second': 100.846, 'epoch': 0.13, 'step': 1000}, {'train_runtime': 112.2253, 'train_samples_per_second': 3240.658, 'train_steps_per_second': 405.096, 'total_flos': 265043324928000.0, 'train_loss': 0.4653592834472656, 'epoch': 0.13, 'step': 1000}]
+
+2024-04-06 00:49:12.790956
+training_accuracy: 0.9044940112845218, test_accuracy0.9054194506310319
+95_test: 2024-04-06 00:49:12.789543 lora_rank: 1 num_params: (628994, 125276164)
+95_train: 2024-04-06 00:49:12.788698 lora_rank: 1 num_params: (628994, 125276164)
+90_test: 2024-04-06 00:49:12.787849 lora_rank: 1 num_params: (628994, 125276164)
+90_train: 2024-04-06 00:49:12.786972 lora_rank: 1 num_params: (628994, 125276164)
+2024-04-06 00:49:12.785862 lora_rank: 1 num_params: (628994, 125276164)
+[{'loss': 0.5129, 'grad_norm': 34.359012603759766, 'learning_rate': 4.945009018520963e-05, 'epoch': 0.07, 'step': 500}, {'loss': 0.3553, 'grad_norm': 6.696749210357666, 'learning_rate': 4.890018037041925e-05, 'epoch': 0.13, 'step': 1000}, {'eval_train_loss': 0.3009343445301056, 'eval_train_accuracy': 0.9035206387963177, 'eval_train_runtime': 77.1628, 'eval_train_samples_per_second': 785.534, 'eval_train_steps_per_second': 98.195, 'epoch': 0.13, 'step': 1000}, {'eval_test_loss': 0.29332810640335083, 'eval_test_accuracy': 0.9067557535263548, 'eval_test_runtime': 8.4995, 'eval_test_samples_per_second': 792.398, 'eval_test_steps_per_second': 99.064, 'epoch': 0.13, 'step': 1000}, {'train_runtime': 114.9589, 'train_samples_per_second': 3163.601, 'train_steps_per_second': 395.463, 'total_flos': 265043324928000.0, 'train_loss': 0.43408766174316404, 'epoch': 0.13, 'step': 1000}]
+
+2024-04-06 01:03:19.970287
+training_accuracy: 0.46980895502689146, test_accuracy0.46057906458797326
+99_test: 2024-04-06 01:03:19.968911 lora_rank: 1 num_params: (628994, 125276164)
+99_train: 2024-04-06 01:03:19.968081 lora_rank: 1 num_params: (628994, 125276164)
+90_test: 2024-04-06 01:03:19.967241 lora_rank: 1 num_params: (628994, 125276164)
+90_train: 2024-04-06 01:03:19.966355 lora_rank: 1 num_params: (628994, 125276164)
+2024-04-06 01:03:19.965229 lora_rank: 1 num_params: (628994, 125276164)
+[{'loss': 0.536, 'grad_norm': 126.0002670288086, 'learning_rate': 4.945009018520963e-05, 'epoch': 0.07, 'step': 500}, {'loss': 0.4125, 'grad_norm': 1.1123228073120117, 'learning_rate': 4.890018037041925e-05, 'epoch': 0.13, 'step': 1000}, {'eval_train_loss': 0.4340752065181732, 'eval_train_accuracy': 0.891823671099086, 'eval_train_runtime': 78.1376, 'eval_train_samples_per_second': 775.734, 'eval_train_steps_per_second': 96.97, 'epoch': 0.13, 'step': 1000}, {'eval_test_loss': 0.4299446642398834, 'eval_test_accuracy': 0.8911655530809206, 'eval_test_runtime': 8.7132, 'eval_test_samples_per_second': 772.969, 'eval_test_steps_per_second': 96.635, 'epoch': 0.13, 'step': 1000}, {'train_runtime': 116.5287, 'train_samples_per_second': 3120.982, 'train_steps_per_second': 390.136, 'total_flos': 265043324928000.0, 'train_loss': 0.4742322998046875, 'epoch': 0.13, 'step': 1000}]
+
