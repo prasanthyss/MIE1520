@@ -32,9 +32,6 @@ def process_txt_files(folder_path):
             with open(json_file, 'w') as file:
                 file.write(line_to_write)
 
-folder_path = os.path.join(os.path.dirname(os.getcwd()), 'logs')
-process_txt_files(folder_path)
-
 # %% [markdown]
 # ## Read Json Files
 
@@ -62,8 +59,6 @@ def collect_data(finetune_type):
             if 'eval_test_accuracy' in data:
                 test_accuracies.append(data['eval_test_accuracy'])
         
-        train_accuracies.sort()
-        test_accuracies.sort()
         return train_accuracies, test_accuracies
     
     
