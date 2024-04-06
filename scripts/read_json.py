@@ -58,12 +58,10 @@ def collect_data(finetune_type):
         test_accuracies = []
         for data in json_data:
             if 'eval_train_accuracy' in data:
-                train_accuracies.append((data['eval_train_accuracy'], data['eval_train_loss'], data['epoch']))
+                train_accuracies.append(data['eval_train_accuracy'])
             if 'eval_test_accuracy' in data:
-                test_accuracies.append((data['eval_test_accuracy'], data['eval_test_loss'], data['epoch']))
+                test_accuracies.append(data['eval_test_accuracy'])
         
-        train_accuracies.sort()
-        test_accuracies.sort()
         return train_accuracies, test_accuracies
     
     
@@ -82,9 +80,9 @@ def collect_data(finetune_type):
       file_path = os.path.join(folderpath, '_'.join([finetune_type, task+'.json']))
       if (os.path.exists(file_path)):
          json_data = read_json_file(file_path)
-         train, test = collect_accuracy(json_data)
-         best_train = train[0][0]
-         best_test = test[0][0]
+         train_accuracies, test_accuracies = collect_accuracy(json_data)
+         best_train = max(train_accuracies)
+         best_test = max(test_accuracies)
          result_dict[task] = {'train': best_train, 'test': best_test}
 
     return result_dict
