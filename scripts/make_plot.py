@@ -88,8 +88,8 @@ def make_plot(file_path):
     ax[0].legend()
 
     # Second subplot: Loss vs Epochs
-    ax[1].plot(train_epochs, train_accuracy, 'r-', label='train ccuracy')
-    ax[1].plot(test_epochs, test_accuracy, 'b-', label='train ccuracy')
+    ax[1].plot(train_epochs, train_accuracy, 'r-', label='train accuracy')
+    ax[1].plot(test_epochs, test_accuracy, 'b-', label='test accuracy')
     ax[1].set_xlabel('Epochs')
     ax[1].set_ylabel('Accuracy')
     ax[1].set_title('Accuracy vs Epochs')
