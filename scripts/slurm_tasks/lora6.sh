@@ -5,4 +5,4 @@
 #SBATCH -w overture --gres=gpu:1
 
 # task-1
-python3 ./lora.py --model BERT-Base --dataset QQP --n_epochs 6
+python3 ./lora.py --model BERT-Base --eval_steps 100000 --dataset QQP --n_epochs 6
