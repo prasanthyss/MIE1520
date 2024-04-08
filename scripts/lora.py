@@ -116,9 +116,10 @@ class PEFT(FineTune):
             
 
         for lora_rank in lora_ranks:
-            print(f"Training with lora_rank: {lora_rank}")
             if (callback.reached_accuracy):
                 break
+            
+            print(f"Training with lora_rank: {lora_rank}")
             config = LoraConfig(task_type=TaskType.SEQ_CLS, inference_mode=False, r=lora_rank, lora_alpha=32)
             model = get_peft_model(self.model, config)
             training_args = TrainingArguments(output_dir="../logs",
