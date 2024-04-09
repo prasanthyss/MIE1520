@@ -74,14 +74,17 @@ class FineTune():
 
         return tokenized_dataset
 
-    def train(self, num_epochs=6, lr=None, eval_steps=1000):
+    def train(self, num_epochs=6, lr=None, eval_steps=None):
 
         training_args = TrainingArguments(output_dir="../logs",
                                           num_train_epochs=num_epochs,
-                                          evaluation_strategy="steps",
-                                          #weight_decay=0.01,
-                                          eval_steps=eval_steps,
+                                          evaluation_strategy="epoch",
                                           save_strategy="no")
+
+        if eval_steps is not None:
+            training_args.evaluation_strategy="steps"
+            training_args.eval_steps=eval_steps
+
         if lr is not None:
             training_args.learning_rate=lr
 
@@ -126,7 +129,7 @@ parser.add_argument('--n_epochs', type=int,
 parser.add_argument('--lr', type=float, 
                     help="Learning rate to train the model.", default=None)
 parser.add_argument('--eval_steps', type=int, 
-                    help="Steps to evaluate model", default=1000)
+                    help="Steps to evaluate model", default=None)
 
 def main():
     args = parser.parse_args()
