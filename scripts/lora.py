@@ -129,8 +129,8 @@ class PEFT(FineTune):
                                           save_strategy="no")
 
             if eval_steps is not None:
-                training_Args.evaluation_strategy="steps"
-                training_Args.eval_steps=eval_steps
+                training_args.evaluation_strategy="steps"
+                training_args.eval_steps=eval_steps
 
             if lr is not None:
                 training_args.learning_rate=lr
@@ -178,7 +178,7 @@ parser.add_argument('--n_epochs', type=int,
 parser.add_argument('--lr', type=float, 
                     help="Learning rate to train the model.", default=5e-5)
 parser.add_argument('--eval_steps', type=int, 
-                    help="Steps to evaluate model", default=1000)
+                    help="Steps to evaluate model", default=None)
 
 def main():
     args = parser.parse_args()
