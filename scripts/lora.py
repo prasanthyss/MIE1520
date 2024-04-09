@@ -189,8 +189,8 @@ def main():
     lr = args.lr
     eval_steps = args.eval_steps
 
-    results_dict = collect_data("finetune")
     task = '_'.join([os.path.basename(models_dict[model_path]), os.path.basename(datasets_dict[dataset_path]['path'])])
+    results_dict = collect_data("finetune", task)
     train_acc, test_acc = results_dict[task]['train'], results_dict[task]['test']
 
     model = PEFT(models_dict[model_path], datasets_dict[dataset_path], train_acc, test_acc)

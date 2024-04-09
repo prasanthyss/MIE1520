@@ -19,7 +19,6 @@ def process_txt_files(folder_path):
             file_path = os.path.join(folder_path, filename)
             process_text_file(file_path)
 
-
 def process_text_file(file_path):
     filename = os.path.basename(file_path)
     if filename.endswith(".txt"):
@@ -45,15 +44,15 @@ def process_text_file(file_path):
 
 # %%
 
-def collect_data(finetune_type):
+def collect_data(finetune_type, task):
     """
     go through all the 'task.json' files 
     and collect best train and test accuracies
     """
 
-    def read_json_file(file_path):
+    def read_json_file(json_file):
         # Open the JSON file for reading
-        with open(file_path, 'r') as file:
+        with open(json_file, 'r') as file:
             # Load the JSON data
             data = json.load(file)
         return data
@@ -67,29 +66,19 @@ def collect_data(finetune_type):
             if 'eval_test_accuracy' in data:
                 test_accuracies.append(data['eval_test_accuracy'])
         
-        return train_accuracies, test_accuracies
-    
+        return train_accuracies, test_accuracies    
     
     folderpath = "../logs"
     result_dict = {}
-
-
-    # tasks
-    model_names = ['bert-base-uncased', 'bert-large-uncased', 'roberta-base', 
-                   'roberta-large', 'dynamic_tinybert']
-    dataset_names = ['anli', 'mrpc', 'qqp', 'sst2', 'yelp_review_full', 'mnli']
-    tasks = ['_'.join([model_name, dataset_name]) 
-             for model_name in model_names for dataset_name in dataset_names] 
-    
-    for task in tasks:
-      file_path = os.path.join(folderpath, '_'.join([finetune_type, task+'.txt']))
-      if (os.path.exists(file_path)):
-         json_file = process_text_file(file_path)
-         json_data = read_json_file(json_file)
-         train_accuracies, test_accuracies = collect_accuracy(json_data)
-         best_train = max(train_accuracies)
-         best_test = max(test_accuracies)
-         result_dict[task] = {'train': best_train, 'test': best_test}
+ 
+    file_path = os.path.join(folderpath, '_'.join([finetune_type, task+'.txt']))
+    if (os.path.exists(file_path)):
+        json_file = process_text_file(file_path)
+        json_data = read_json_file(json_file)
+        train_accuracies, test_accuracies = collect_accuracy(json_data)
+        best_train = max(train_accuracies)
+        best_test = max(test_accuracies)
+        result_dict[task] = {'train': best_train, 'test': best_test}
 
     return result_dict
 
