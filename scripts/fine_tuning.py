@@ -20,7 +20,9 @@ import numpy as np
 datasets_dict = {'MRPC': {'path': "SetFit/mrpc", 'data': ['text1', 'text2'], 'split': 'train'},
                  'QQP': {'path': "SetFit/qqp", 'data': ['text1', 'text2'], 'split': 'train'},
                  'SST': {'path': "stanfordnlp/sst2", 'data': ['sentence'], 'split': 'train'},
-                 'ANLI': {'path': "facebook/anli", 'data': ['premise', 'hypothesis'], 'split': 'train_r1'}}
+                 'ANLI': {'path': "facebook/anli", 'data': ['premise', 'hypothesis'], 'split': 'train_r1'},
+                 'YELP': {'path': "yelp_review_full", 'data': ['text'], 'split': 'train'},
+                 'MNLI': {'path': "SetFit/mnli", 'data': ['text1', 'text2'], 'split': 'train'}}
 
 models_dict = {'Tiny-BERT': "Intel/dynamic_tinybert",
                 'BERT-Base': "google-bert/bert-base-uncased",

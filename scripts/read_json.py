@@ -69,7 +69,7 @@ def collect_data(finetune_type):
     # tasks
     model_names = ['bert-base-uncased', 'bert-large-uncased', 'roberta-base', 
                    'roberta-large', 'dynamic_tinybert']
-    dataset_names = ['anli', 'mrpc', 'qqp', 'sst2']
+    dataset_names = ['anli', 'mrpc', 'qqp', 'sst2', 'yelp_review_full', 'mnli']
     tasks = ['_'.join([model_name, dataset_name]) 
              for model_name in model_names for dataset_name in dataset_names] 
     
