@@ -119,7 +119,7 @@ parser = argparse.ArgumentParser()
 
 parser.add_argument('--model', type=str, choices=['Tiny-BERT', 'BERT-Base', 'BERT-Large', 'RoBERTa-Base', 'RoBERTa-Large'], 
                     help="Please pass the model you want to train", required=True)
-parser.add_argument('--dataset', type=str, choices=['MRPC', 'QQP', 'SST', 'ANLI'], 
+parser.add_argument('--dataset', type=str, choices=['MRPC', 'QQP', 'SST', 'ANLI', 'MNLI', 'YELP'], 
                     help="Please specify the dataset to finetune", required=True)
 parser.add_argument('--n_epochs', type=int, 
                     help="Default epochs is 6", default=6)
