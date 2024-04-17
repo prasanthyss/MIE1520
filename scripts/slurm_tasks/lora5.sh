@@ -5,4 +5,4 @@
 #SBATCH --gres=gpu:1
 
 # task-1
-python3 ./lora.py --model BERT-Base --dataset MRPC --n_epochs 6 --eval_steps 100
+python3 ./lora.py --model BERT-Base --dataset MRPC --n_epochs 6
