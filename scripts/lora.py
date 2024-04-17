@@ -45,7 +45,7 @@ class AccuracyStoppingCallback(TrainerCallback):
             self.reached_95_test_acc = (metrics[metric_key] >= 0.95*self.test_accuracy)
             self.reached_99_test_acc = (metrics[metric_key] >= 0.99*self.test_accuracy)
         
-        self.reached_accuracy = (self.reached_99_train_acc and self.reached_99_test_acc)
+        self.reached_accuracy = (self.reached_90_train_acc and self.reached_90_test_acc)
         control.should_training_stop = (self.reached_accuracy or metrics['epoch'] >= self.num_epochs)
 
 class PEFT(FineTune):
