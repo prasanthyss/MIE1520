@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=bbase
+#SBATCH --job-name=bb_sst
 #SBATCH --nodes=1
 #SBATCH --mem=32G
 #SBATCH --gres=gpu:1

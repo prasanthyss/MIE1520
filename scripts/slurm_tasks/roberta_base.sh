@@ -11,7 +11,7 @@
 # python3 ./fine_tuning.py --model RoBERTa-Base --lr 1e-7 --dataset MRPC --n_epochs 6
 
 # ANLI
-python3 ./fine_tuning.py --model RoBERTa-Base --lr 1e-7 --dataset ANLI --n_epochs 6
+python3 ./fine_tuning.py --model RoBERTa-Base --lr 1e-7 --dataset ANLI --n_epochs 15
 
 # QQP
 # python3 ./fine_tuning.py --model RoBERTa-Base --lr 1e-7 --dataset QQP --n_epochs 6
