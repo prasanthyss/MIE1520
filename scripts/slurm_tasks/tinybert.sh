@@ -13,7 +13,7 @@
 #python3 ./make_plot.py --file '../logs/finetune_bert-base-uncased_mrpc.txt'
 
 # ANLI
-python3 ./fine_tuning.py --model Tiny-BERT --dataset ANLI --n_epochs 15
+python3 ./fine_tuning.py --model Tiny-BERT --dataset ANLI --n_epochs 30
 python3 ./make_plot.py --file '../logs/finetune_bert-base-uncased_anli.txt'
 
 # QQP

@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=mrpc
+#SBATCH --job-name=bb_mrpc
 #SBATCH --nodes=1
 #SBATCH --mem=32G
 #SBATCH --gres=gpu:1
