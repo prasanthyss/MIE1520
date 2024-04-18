@@ -5,7 +5,7 @@
 #SBATCH --gres=gpu:1
 
 # ANLI
-python3 ./lora.py --model RoBERTa-Large --dataset ANLI --n_epochs 6
+python3 ./lora.py --model RoBERTa-Large --dataset ANLI --n_epochs 25
 
 # SST
 #python3 ./lora.py --model RoBERTa-Large --dataset SST --n_epochs 6
