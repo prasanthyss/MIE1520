@@ -125,7 +125,7 @@ class PEFT(FineTune):
             training_args = TrainingArguments(output_dir="../logs",
                                           num_train_epochs=num_epochs,
                                           evaluation_strategy="epoch",
-                                          weight_decay=0.01,
+                                          #weight_decay=0.01,
                                           save_strategy="no")
 
             if eval_steps is not None:
