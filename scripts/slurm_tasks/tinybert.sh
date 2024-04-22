@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=tinybert
+#SBATCH --job-name=QQP
 #SBATCH --nodes=1
 #SBATCH --mem=32G
 #SBATCH --gres=gpu:1
@@ -13,9 +13,9 @@
 #python3 ./make_plot.py --file '../logs/finetune_bert-base-uncased_mrpc.txt'
 
 # ANLI
-python3 ./fine_tuning.py --model Tiny-BERT --dataset ANLI --n_epochs 30
-python3 ./make_plot.py --file '../logs/finetune_bert-base-uncased_anli.txt'
+#python3 ./fine_tuning.py --model Tiny-BERT --dataset ANLI --n_epochs 30
+#python3 ./make_plot.py --file '../logs/finetune_bert-base-uncased_anli.txt'
 
 # QQP
-#python3 ./fine_tuning.py --model Tiny-BERT --dataset QQP --n_epochs 6
-#python3 ./make_plot.py --file '../logs/finetune_bert-base-uncased_qqp.txt'
+python3 ./fine_tuning.py --model Tiny-BERT --dataset QQP --n_epochs 6
+python3 ./make_plot.py --file '../logs/finetune_bert-base-uncased_qqp.txt'
