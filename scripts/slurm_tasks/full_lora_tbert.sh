@@ -1,0 +1,8 @@
+#!/bin/bash
+#SBATCH --job-name=tb
+#SBATCH --nodes=1
+#SBATCH --mem=32G
+#SBATCH --gres=gpu:1
+
+# MRPC
+python3 ./full_lora_training --model Tiny-BERT --dataset MRPC --n_epochs 20
