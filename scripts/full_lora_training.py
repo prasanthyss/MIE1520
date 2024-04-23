@@ -18,6 +18,7 @@ class PEFT(FineTune):
         # set the log file
         log_dir = os.path.join(os.path.dirname(os.getcwd()), 'logs')
         self.log_file = os.path.join(log_dir, '_'.join(['full_lora', os.path.basename(model_path), 
+                                                       os.path.basename(dataset_dict['path']+'.txt')]))
         self.log_lines = []
         
     def train(self, num_epochs=6, lr=None, eval_steps=None):
