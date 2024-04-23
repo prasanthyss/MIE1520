@@ -5,5 +5,5 @@
 #SBATCH --gres=gpu:1
 
 # MRPC
-python3 ./full_lora_training --model BERT-Base --dataset MRPC --n_epochs 20
+python3 ./full_lora_training.py --model BERT-Base --dataset MRPC --n_epochs 20
 
