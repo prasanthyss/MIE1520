@@ -12,16 +12,12 @@ import os
 
 
 class PEFT(FineTune):
-    def __init__(self, model_path, dataset_dict, train_acc, test_acc):
+    def __init__(self, model_path, dataset_dict):
         super().__init__(model_path, dataset_dict)
 
         # set the log file
         log_dir = os.path.join(os.path.dirname(os.getcwd()), 'logs')
         self.log_file = os.path.join(log_dir, '_'.join(['full_lora', os.path.basename(model_path), 
-                                                       os.path.basename(dataset_dict['path']+'.txt')]))
-        self.train_acc = train_acc
-        self.test_acc = test_acc
-    
         self.log_lines = []
         
     def train(self, num_epochs=6, lr=None, eval_steps=None):
@@ -82,7 +78,6 @@ class PEFT(FineTune):
         def write_logs():
             with open(self.log_file, "a") as file:
                 file.write(str(datetime.now())+"\n")
-                file.write(f"training_accuracy: {self.train_acc}, test_accuracy: {self.test_acc}\n")
                 lines = "\n".join(self.log_lines)
                 file.write(lines)
             print(f"Results are appended to {self.log_file}")
@@ -117,9 +112,8 @@ def main():
 
     task = '_'.join([os.path.basename(models_dict[model_path]), os.path.basename(datasets_dict[dataset_path]['path'])])
     results_dict = collect_data("finetune", task)
-    train_acc, test_acc = results_dict[task]['train'], results_dict[task]['test']
 
-    model = PEFT(models_dict[model_path], datasets_dict[dataset_path], train_acc, test_acc)
+    model = PEFT(models_dict[model_path], datasets_dict[dataset_path])
     model.train(num_epochs=num_epochs, lr=lr, eval_steps=eval_steps)
 
 if __name__ == "__main__":
