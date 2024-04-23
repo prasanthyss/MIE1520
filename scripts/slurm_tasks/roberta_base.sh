@@ -8,7 +8,7 @@
 # python3 ./fine_tuning.py --model RoBERTa-Base --lr 1e-7 --dataset SST --n_epochs 6
 
 # MRPC
-python3 ./fine_tuning.py --model RoBERTa-Base --lr 1e-7 --dataset MRPC --n_epochs 6
+python3 ./fine_tuning.py --model RoBERTa-Base --lr 5e-7 --dataset MRPC --n_epochs 20
 
 # ANLI
 #python3 ./fine_tuning.py --model RoBERTa-Base --lr 1e-6 --dataset ANLI --n_epochs 30
