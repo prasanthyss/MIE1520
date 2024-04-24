@@ -8,7 +8,7 @@
 #python3 ./lora.py --model Tiny-BERT --dataset MRPC --n_epochs 20
 
 # QQP
-python3 ./lora.py --model Tiny-BERT --dataset QQP --n_epochs 20
+python3 ./lora.py --model Tiny-BERT --dataset QQP --n_epochs 6
 
 # ANLI
 #python3 ./lora.py --model Tiny-BERT --dataset ANLI --n_epochs 25

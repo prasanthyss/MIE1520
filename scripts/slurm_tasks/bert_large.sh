@@ -9,7 +9,7 @@
 # python3 ./make_plot.py --file '../logs/finetune_bert-base-uncased_sst2.txt'
 
 # MRPC
-python3 ./fine_tuning.py --model BERT-Large --lr 5e-7 --dataset MRPC --n_epochs 20
+python3 ./fine_tuning.py --model BERT-Large --lr 1e-7 --dataset MRPC --n_epochs 30
 # python3 ./make_plot.py --file '../logs/finetune_bert-base-uncased_mrpc.txt'
 
 # ANLI
