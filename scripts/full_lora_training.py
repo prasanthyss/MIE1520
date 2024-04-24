@@ -33,8 +33,8 @@ class PEFT(FineTune):
             self.log_lines.append(str(datetime.now()) + " lora_rank: " + str(lora_rank) + " num_params: " + 
                                     str(model.get_nb_trainable_parameters()))
             self.log_lines.append(str(self.trainer.state.log_history) + "\n\n")
-            train_accuracies = [result_dict['eval_train_accuracy'] for result_dict in self.trainer.state.log_history \
-                                if 'eval_train_accuracy' in result_dict]
+            train_accuracies = [result_dict['eval_test_accuracy'] for result_dict in self.trainer.state.log_history \
+                                if 'eval_test_accuracy' in result_dict]
             lora_accuracies.append(max(train_accuracies))
             
 
