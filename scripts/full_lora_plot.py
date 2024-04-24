@@ -1,5 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.ticker import FuncFormatter
+
 
 tb_accs = [0.8385337776431384, 0.8324750075734626, 0.8548924568312632, 0.8561042108451984, 0.8673129354740987, 0.868524689488034, 0.8745834595577098, 0.8773099060890639, 0.8782187215995153]
 bb_accs = [0.9100272644653136, 0.909421387458346, 0.9148742805210542, 0.9248712511360194, 0.9272947591638897, 0.9363829142684035, 0.9339594062405332, 0.93850348379279, 0.944562253862466]
@@ -26,6 +28,15 @@ plt.plot(ranks, bb_accs, label='BERT-Base', linestyle='--', color='orange', mark
 plt.plot(ranks, rb_accs, label='RoBERTa-Base', linestyle='-.', color='green', marker='^')
 plt.plot(ranks, bl_accs, label='BERT-Large', linestyle=':', color='red', marker='d')
 plt.plot(ranks, rl_accs, label='RoBERTa-Large', linestyle='-', color='purple', marker='x')
+
+plt.tick_params(axis='both', which='major', labelsize=12)
+
+# Function to format y-axis ticks as percentages
+def percentage_formatter(x, pos):
+    return '{:.0f}%'.format(x * 100)
+
+# Apply the formatter to the y-axis ticks
+plt.gca().yaxis.set_major_formatter(FuncFormatter(percentage_formatter))
 
 # Add a horizontal dashed line at y = 1
 plt.axhline(y=0, color='gray', linestyle='--')
