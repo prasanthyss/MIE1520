@@ -128,7 +128,7 @@
        transform="matrix(0.77081369,0,0,0.81158123,42.956629,83.841806)"
        id="g841"
        style="fill:#005b00;fill-opacity:1"
-       inkscape:export-filename="./g841.png"
+       inkscape:export-filename="./g841.pdf"
        inkscape:export-xdpi="96"
        inkscape:export-ydpi="96">
       <g
@@ -1496,19 +1496,19 @@
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="0" />
     <path
-       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.25;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker940);stroke-dasharray:0.25,0.5;stroke-dashoffset:0"
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.25;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:0.25, 0.5;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker940)"
        d="m 48.37412,95.464232 26.08844,3.198984"
        id="path939"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="0" />
     <path
-       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.25;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker940-7);stroke-dasharray:0.25,0.5;stroke-dashoffset:0"
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.25;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:0.25, 0.5;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker940-7)"
        d="m 48.420309,90.144016 26.300189,2.193148"
        id="path939-1"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="0" />
     <path
-       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.25;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:0.25,0.5;stroke-opacity:1;marker-end:url(#Triangle-8);stroke-dashoffset:0"
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.25;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:0.25, 0.5;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#Triangle-8)"
        d="M 48.383653,86.926761 74.570727,81.642616"
        id="path935-4"
        inkscape:connector-type="polyline"
@@ -1527,24 +1527,48 @@
     <text
        xml:space="preserve"
        style="font-size:3.175px;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.25;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       x="43.568569"
-       y="105.2367"
-       id="text940-1"><tspan
+       x="44.529526"
+       y="105.62089"
+       id="text940-8"><tspan
          sodipodi:role="line"
-         id="tspan940-9"
+         id="tspan940-3"
          style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.25;stroke-dasharray:none;stroke-opacity:1"
-         x="43.568569"
-         y="105.2367">T</tspan></text>
+         x="44.529526"
+         y="105.62089">R</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:1.91109px;writing-mode:tb-rl;text-orientation:upright;fill:#000000;stroke:#000000;stroke-width:0.150479"
+       x="47.77182"
+       y="100.91151"
+       id="text1"
+       transform="scale(0.99313987,1.0069075)"><tspan
+         sodipodi:role="line"
+         id="tspan1"
+         style="text-orientation:upright;stroke-width:0.150479"
+         x="47.77182"
+         y="100.91151">d</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:3.175px;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.25;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       x="91.08522"
-       y="105.45174"
-       id="text941"><tspan
+       x="91.135071"
+       y="106.33578"
+       id="text940-8-0"><tspan
          sodipodi:role="line"
-         id="tspan941"
-         style="stroke-width:0.25"
-         x="91.08522"
-         y="105.45174">W</tspan></text>
+         id="tspan940-3-3"
+         style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.25;stroke-dasharray:none;stroke-opacity:1"
+         x="91.135071"
+         y="106.33578">R</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:1.91109px;writing-mode:tb-rl;text-orientation:upright;fill:#000000;stroke:#000000;stroke-width:0.150479"
+       x="94.788956"
+       y="101.70995"
+       id="text1-9"
+       transform="scale(0.99313988,1.0069075)"><tspan
+         sodipodi:role="line"
+         id="tspan1-8"
+         style="text-orientation:upright;stroke-width:0.150479"
+         x="94.788956"
+         y="101.70995">D</tspan></text>
   </g>
 </svg>
